@@ -135,6 +135,20 @@ void merge_array(void) {
   TEST_ASSERT_TRUE(CompareArray(&array1, &array1));
 }
 
+void set_operations_array(void) {
+  struct Array array1;
+  struct Array array2;
+  Init(&array1);
+  Init(&array2);
+  for (int i = 0; i < ARRAY_SIZE * 2; i++) {
+    Append(&array1, i);
+    Append(&array2, i * 2);
+  }
+
+  struct Array *unitedArray = Union(&array1, &array2);
+  Display(unitedArray);
+}
+
 void setUp(void) {}
 
 void tearDown(void) {}
@@ -151,5 +165,6 @@ int main(void) {
   RUN_TEST(rotate_array);
   RUN_TEST(sort_array);
   RUN_TEST(merge_array);
+  RUN_TEST(set_operations_array);
   return UNITY_END();
 }

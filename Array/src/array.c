@@ -270,17 +270,18 @@ int CompareArray(struct Array *arr1, struct Array *arr2) {
 }
 
 struct Array *Union(struct Array *arr1, struct Array *arr2) {
-  int i = 0;
-  int j = 0;
-  int k = 0;
-  struct Array *arr3;
+  int i, j, k;
+  i = j = k = 0;
+
+  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
   Init(arr3);
   Reserve(arr3, arr1->length + arr2->length);
+
   while (i < arr1->length && j < arr2->length) {
-    if (arr1->arr[i] > arr2->arr[j]) {
+    if (arr1->arr[i] < arr2->arr[j]) {
       arr3->arr[k++] = arr1->arr[i++];
     } else {
-      arr3->arr[k++] = arr1->arr[j++];
+      arr3->arr[k++] = arr2->arr[j++];
     }
   }
 
@@ -294,14 +295,14 @@ struct Array *Union(struct Array *arr1, struct Array *arr2) {
 
   arr3->length = k;
 
-  return arr3;  
+  return arr3;
 }
 
 struct Array *Intersection(struct Array *arr1, struct Array *arr2) {
   int i = 0;
   int j = 0;
   int k = 0;
-  struct Array *arr3;
+  struct Array *arr3 = NULL;
   Init(arr3);
   Reserve(arr3, arr1->length + arr2->length);
   while (i < arr1->length && j < arr2->length) {
@@ -320,23 +321,33 @@ struct Array *Intersection(struct Array *arr1, struct Array *arr2) {
 }
 
 struct Array *Difference(struct Array *arr1, struct Array *arr2) {
-  int i = 0;
-  int j = 0;
-  int k = 0;
-  struct Array *arr3;
-  Init(&arr3);
+  int i, j, k;
+  i = j = k = 0;
+
+  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
+  Init(arr3);
   Reserve(arr3, arr1->length + arr2->length);
+
   while (i < arr1->length && j < arr2->length) {
     if (arr1->arr[i] < arr2->arr[j]) {
       arr3->arr[k++] = arr1->arr[i++];
     } else if (arr1->arr[i] > arr2->arr[j]) {
-      j++;
+      arr3->arr[k++] = arr2->arr[j++];
     } else {
       i++;
       j++;
     }
   }
 
+  for (; i < arr1->length; i++) {
+    arr3->arr[k++] = arr1->arr[i];
+  }
+
+  for (; j < arr2->length; j++) {
+    arr3->arr[k++] = arr2->arr[j];
+  }
+
   arr3->length = k;
+
   return arr3;
 }
