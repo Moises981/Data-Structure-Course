@@ -57,6 +57,10 @@ TEST_F(ArrayTest, MoveOperations) {
 
   arr->Reverse();
   EXPECT_EQ(arr->Get(0), 5);
+
+  arr->Append(-4);
+  arr->Append(-12);
+  arr->Rearrange();
 }
 
 TEST_F(ArrayTest, SortOperations) {

@@ -160,3 +160,17 @@ void Array::InsertSort(int item) {
   }
   Insert(i, item);
 }
+
+void Array::Rearrange() {
+  int i = 0;
+  int j = length_ - 1;
+  while (i < j) {
+    while (arr_[i] < 0)
+      i++;
+    while (arr_[i] >= 0)
+      j--;
+    if (i < j) {
+      Swap(&arr_[i], &arr_[j]);
+    }
+  }
+}
