@@ -59,11 +59,11 @@ int LinearSearch(const struct Array *const array, int item) {
 }
 
 int BinarySearch(const struct Array *const array, int item) {
-  int h = array->length;
+  int h = array->length - 1;
   int l = 0;
   int m;
 
-  while (h != l) {
+  while (l <= h) {
     m = (h + l) / 2;
     if (array->arr[m] == item) {
       return m;
@@ -128,7 +128,7 @@ int Sum(const struct Array *const array) {
 
 void Reverse(struct Array *const array) {
   int j = array->length;
-  for (int i = 0; j >= 0; i++, j--) {
+  for (int i = 0; i < j; i++, j--) {
     Swap(&array->arr[i], &array->arr[j]);
   }
 }
@@ -207,6 +207,7 @@ struct Array *MergeArray(const struct Array *arr1, const struct Array *arr2) {
       arr3->arr[k++] = arr1->arr[i++];
     } else {
       arr3->arr[k++] = arr2->arr[j++];
+      i++;
     }
   }
 
@@ -218,7 +219,7 @@ struct Array *MergeArray(const struct Array *arr1, const struct Array *arr2) {
     arr3->arr[k++] = arr2->arr[j];
   }
 
-  arr3->length = arr1->length + arr2->length;
+  arr3->length = k;
 
   return arr3;
 }
@@ -282,6 +283,7 @@ struct Array *Union(struct Array *arr1, struct Array *arr2) {
       arr3->arr[k++] = arr1->arr[i++];
     } else {
       arr3->arr[k++] = arr2->arr[j++];
+      i++;
     }
   }
 
@@ -302,7 +304,7 @@ struct Array *Intersection(struct Array *arr1, struct Array *arr2) {
   int i = 0;
   int j = 0;
   int k = 0;
-  struct Array *arr3 = NULL;
+  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
   Init(arr3);
   Reserve(arr3, arr1->length + arr2->length);
   while (i < arr1->length && j < arr2->length) {

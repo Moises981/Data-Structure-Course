@@ -117,6 +117,7 @@ void merge_array(void) {
     Append(&array1, i);
     Append(&array2, i * 3);
   }
+
   struct Array *array_merged = MergeArray(&array1, &array2);
 
   TEST_ASSERT_EQUAL_INT32(0, array_merged->arr[0]);
@@ -146,10 +147,16 @@ void set_operations_array(void) {
   }
 
   struct Array *unitedArray = Union(&array1, &array2);
-  Display(unitedArray);
+
+  TEST_ASSERT_EQUAL_INT32(9, unitedArray->length);
+
+  struct Array *intersectArray = Intersection(&array1, &array2);
+  Display(intersectArray);
 }
 
-void setUp(void) {}
+void setUp(void) {
+  
+}
 
 void tearDown(void) {}
 
