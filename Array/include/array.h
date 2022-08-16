@@ -17,6 +17,7 @@ extern void Reserve(struct Array *array, int size);
 extern void Display(const struct Array *const array);
 extern void Append(struct Array *array, int item);
 extern void Insert(struct Array *const array, int index, int item);
+extern void Delete(struct Array *const array, int index);
 extern int LinearSearch(const struct Array *const array, int item);
 extern int BinarySearch(const struct Array *const array, int item);
 extern int Get(const struct Array *const array, int index);
@@ -33,15 +34,19 @@ extern void RightRotate(struct Array *const array);
 extern int IsSorted(const struct Array *const array);
 extern void InsertSort(struct Array *array, int item);
 extern void Rearrange(struct Array *const array);
-extern struct Array *MergeArray(const struct Array *array1,
-                                const struct Array *array2);
-extern struct Array *ConcatenateArray(const struct Array *array1,
-                                      const struct Array *array2);
+extern struct Array MergeArray(const struct Array *const array1,
+                               const struct Array *const array2);
+extern struct Array ConcatenateArray(const struct Array *const array1,
+                                     const struct Array *const array2);
 extern void AppendArray(struct Array *base, struct Array *arr);
-extern void CopyArray(struct Array *from, struct Array *to);
-extern int CompareArray(struct Array *arr1, struct Array *arr2);
-extern struct Array *Union(struct Array *arr1, struct Array *arr2);
-extern struct Array *Intersection(struct Array *arr1, struct Array *arr2);
-extern struct Array *Difference(struct Array *arr1, struct Array *arr2);
+extern void CopyArray(const struct Array *const from, struct Array *const to);
+extern int CompareArray(const struct Array *const arr1,
+                        const struct Array *const arr2);
+extern struct Array Union(const struct Array *const arr1,
+                          const struct Array *const arr2);
+extern struct Array Intersection(const struct Array *const arr1,
+                                 const struct Array *const arr2);
+extern struct Array Difference(const struct Array *const arr1,
+                               const struct Array *arr2);
 
 #endif

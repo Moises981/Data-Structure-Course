@@ -12,7 +12,11 @@ include_directories(include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_library(${PROJECT_NAME} src/array.c)
-add_library(${PROJECT_NAME}_cpp src/array.cpp)
+
+add_executable(${PROJECT_NAME}_driver src/driver.c)
+target_link_libraries(${PROJECT_NAME}_driver ${PROJECT_NAME})
+
+add_executable(${PROJECT_NAME}_driver_cpp src/driver.cpp)
 
 
 enable_testing()
@@ -21,5 +25,5 @@ add_executable(array_test test/array_test.c)
 target_link_libraries(array_test ${PROJECT_NAME} unity)
 
 add_executable(array_test_cpp test/array_test.cpp)
-target_link_libraries(array_test_cpp ${PROJECT_NAME}_cpp gtest gtest_main)
+target_link_libraries(array_test_cpp gtest gtest_main)
 add_test(array_test_cpp array_test_cpp)

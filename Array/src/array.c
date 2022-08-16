@@ -20,11 +20,16 @@ static void Swap(int *a, int *b) {
 }
 
 void Display(const struct Array *const array) {
-  printf("\nArray : [");
-  for (int i = 0; i < array->length; i++) {
-    printf("%i, ", array->arr[i]);
+  printf("\nArray : ");
+  if (array->length > 0) {
+    printf("[");
+    for (int i = 0; i < array->length; i++) {
+      printf("%i, ", array->arr[i]);
+    }
+    printf("\b\b]\n");
+  } else {
+    printf("[]");
   }
-  printf("\b\b]\n");
 }
 
 void Reserve(struct Array *array, int size) {
@@ -45,6 +50,15 @@ void Insert(struct Array *const array, int index, int item) {
     }
     array->arr[index] = item;
     array->length++;
+  }
+}
+
+void Delete(struct Array *const array, int index) {
+  if (0 <= index && index <= array->length) {
+    for (int i = array->length; i > index; i--) {
+      array->arr[i] = array->arr[i - 1];
+    }
+    array->length--;
   }
 }
 
@@ -194,70 +208,71 @@ void InsertSort(struct Array *array, int item) {
   array->arr[i + 1] = item;
 }
 
-struct Array *MergeArray(const struct Array *arr1, const struct Array *arr2) {
-  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
-  Init(arr3);
-  Reserve(arr3, arr1->length + arr2->length);
+struct Array MergeArray(const struct Array *const arr1,
+                        const struct Array *const arr2) {
+  struct Array buffer;
+  Init(&buffer);
+  Reserve(&buffer, arr1->length + arr2->length);
 
   int i, j, k;
   i = j = k = 0;
 
   while (i < arr1->length && j < arr2->length) {
     if (arr1->arr[i] < arr2->arr[j]) {
-      arr3->arr[k++] = arr1->arr[i++];
+      buffer.arr[k++] = arr1->arr[i++];
     } else {
-      arr3->arr[k++] = arr2->arr[j++];
+      buffer.arr[k++] = arr2->arr[j++];
       i++;
     }
   }
 
   for (; i < arr1->length; i++) {
-    arr3->arr[k++] = arr1->arr[i];
+    buffer.arr[k++] = arr1->arr[i];
   }
 
   for (; j < arr2->length; j++) {
-    arr3->arr[k++] = arr2->arr[j];
+    buffer.arr[k++] = arr2->arr[j];
   }
 
-  arr3->length = k;
+  buffer.length = k;
 
-  return arr3;
+  return buffer;
 }
 
-struct Array *ConcatenateArray(const struct Array *array1,
-                               const struct Array *array2) {
-  struct Array *array3 = (struct Array *)malloc(sizeof(struct Array));
-  Init(array3);
+struct Array ConcatenateArray(const struct Array *const array1,
+                              const struct Array *const array2) {
+  struct Array buffer;
+  Init(&buffer);
   int size = array1->length + array2->length;
 
-  Reserve(array3, size);
-  array3->length = size;
+  Reserve(&buffer, size);
+  buffer.length = size;
 
   int k = 0;
   for (int i = 0; i < array1->length; i++) {
-    array3->arr[k++] = array1->arr[i];
+    buffer.arr[k++] = array1->arr[i];
   }
   for (int i = 0; i < array2->length; i++) {
-    array3->arr[k++] = array2->arr[i];
+    buffer.arr[k++] = array2->arr[i];
   }
-  return array3;
+  return buffer;
 }
 
 void AppendArray(struct Array *base, struct Array *arr) {
-  struct Array *array3 = ConcatenateArray(base, arr);
+  struct Array buffer = ConcatenateArray(base, arr);
   free(base->arr);
-  CopyArray(array3, base);
-  free(array3);
+  CopyArray(&buffer, base);
 }
 
-void CopyArray(struct Array *from, struct Array *to) {
+void CopyArray(const struct Array *const from, struct Array *const to) {
   to->length = from->length;
   to->size = from->size;
   to->arr = (int *)malloc(sizeof(int) * from->size);
   *to->arr = *from->arr;
 }
 
-int CompareArray(struct Array *arr1, struct Array *arr2) {
+int CompareArray(const struct Array *const arr1,
+                 const struct Array *const arr2) {
   if (arr1->length != arr2->length)
     return 0;
 
@@ -270,71 +285,74 @@ int CompareArray(struct Array *arr1, struct Array *arr2) {
   return 1;
 }
 
-struct Array *Union(struct Array *arr1, struct Array *arr2) {
+struct Array Union(const struct Array *const arr1,
+                   const struct Array *const arr2) {
   int i, j, k;
   i = j = k = 0;
 
-  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
-  Init(arr3);
-  Reserve(arr3, arr1->length + arr2->length);
+  struct Array buffer;
+  Init(&buffer);
+  Reserve(&buffer, arr1->length + arr2->length);
 
   while (i < arr1->length && j < arr2->length) {
     if (arr1->arr[i] < arr2->arr[j]) {
-      arr3->arr[k++] = arr1->arr[i++];
+      buffer.arr[k++] = arr1->arr[i++];
     } else {
-      arr3->arr[k++] = arr2->arr[j++];
+      buffer.arr[k++] = arr2->arr[j++];
       i++;
     }
   }
 
   for (; i < arr1->length; i++) {
-    arr3->arr[k++] = arr1->arr[i];
+    buffer.arr[k++] = arr1->arr[i];
   }
 
   for (; j < arr2->length; j++) {
-    arr3->arr[k++] = arr2->arr[j];
+    buffer.arr[k++] = arr2->arr[j];
   }
 
-  arr3->length = k;
+  buffer.length = k;
 
-  return arr3;
+  return buffer;
 }
 
-struct Array *Intersection(struct Array *arr1, struct Array *arr2) {
+struct Array Intersection(const struct Array *const arr1,
+                          const struct Array *const arr2) {
   int i = 0;
   int j = 0;
   int k = 0;
-  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
-  Init(arr3);
-  Reserve(arr3, arr1->length + arr2->length);
+  struct Array buffer;
+  Init(&buffer);
+  Reserve(&buffer, arr1->length + arr2->length);
   while (i < arr1->length && j < arr2->length) {
     if (arr1->arr[i] < arr2->arr[j]) {
       i++;
     } else if (arr1->arr[i] > arr2->arr[j]) {
       j++;
     } else {
-      arr3->arr[k++] = arr1->arr[i++];
+      buffer.arr[k++] = arr1->arr[i++];
       j++;
     }
   }
 
-  arr3->length = k;
-  return arr3;
+  buffer.length = k;
+  return buffer;
 }
 
-struct Array *Difference(struct Array *arr1, struct Array *arr2) {
+struct Array Difference(const struct Array *const arr1,
+                        const struct Array *arr2) {
   int i, j, k;
   i = j = k = 0;
 
-  struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
-  Init(arr3);
-  Reserve(arr3, arr1->length + arr2->length);
+  struct Array buffer;
+  Init(&buffer);
+  Reserve(&buffer, arr1->length + arr2->length);
 
   while (i < arr1->length && j < arr2->length) {
     if (arr1->arr[i] < arr2->arr[j]) {
-      arr3->arr[k++] = arr1->arr[i++];
+      buffer.arr[k++] = arr1->arr[i++];
     } else if (arr1->arr[i] > arr2->arr[j]) {
-      arr3->arr[k++] = arr2->arr[j++];
+      buffer.arr[k++] = arr2->arr[j++];
     } else {
       i++;
       j++;
@@ -342,14 +360,14 @@ struct Array *Difference(struct Array *arr1, struct Array *arr2) {
   }
 
   for (; i < arr1->length; i++) {
-    arr3->arr[k++] = arr1->arr[i];
+    buffer.arr[k++] = arr1->arr[i];
   }
 
   for (; j < arr2->length; j++) {
-    arr3->arr[k++] = arr2->arr[j];
+    buffer.arr[k++] = arr2->arr[j];
   }
 
-  arr3->length = k;
+  buffer.length = k;
 
-  return arr3;
+  return buffer;
 }

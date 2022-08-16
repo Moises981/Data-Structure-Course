@@ -2,9 +2,28 @@
 #include <gtest/gtest.h>
 
 struct ArrayTest : public testing::Test {
-  Array *arr;
-  void SetUp() override { arr = new Array(); }
-  void TearDown() override { delete arr; }
+  Array<float> *arr;
+  Array<float> *arr1;
+  Array<float> *arr2;
+  void SetUp() override {
+    // Empty
+    arr = new Array<float>();
+    // Fill with 0-6 (1)
+    arr1 = new Array<float>();
+    for (int i = 0; i < 6; i++) {
+      arr1->Append(i);
+    }
+    // Fill with 0-12 (2)
+    arr2 = new Array<float>();
+    for (int i = 0; i < 6; i++) {
+      arr2->Append(i * 2);
+    }
+  }
+  void TearDown() override {
+    delete arr;
+    delete arr1;
+    delete arr2;
+  }
 };
 
 TEST_F(ArrayTest, BasicOperations) {
@@ -16,117 +35,74 @@ TEST_F(ArrayTest, BasicOperations) {
 }
 
 TEST_F(ArrayTest, SearchOperations) {
+  EXPECT_EQ(arr1->BinarySearch(4), 4);
+  EXPECT_EQ(arr1->BinarySearch(40), -1);
 
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
-
-  EXPECT_EQ(arr->BinarySearch(4), 4);
-  EXPECT_EQ(arr->BinarySearch(40), -1);
-
-  EXPECT_EQ(arr->LinearSearch(4), 4);
-  EXPECT_EQ(arr->LinearSearch(40), -1);
+  EXPECT_EQ(arr1->LinearSearch(4), 4);
+  EXPECT_EQ(arr1->LinearSearch(40), -1);
 }
 
 TEST_F(ArrayTest, MathOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
-  EXPECT_EQ(arr->Min(), 0);
-  EXPECT_EQ(arr->Max(), 5);
-  EXPECT_EQ(arr->Sum(), 15);
-  EXPECT_EQ(arr->Avg(), 2.5f);
+  EXPECT_EQ(arr1->Min(), 0);
+  EXPECT_EQ(arr1->Max(), 5);
+  EXPECT_EQ(arr1->Sum(), 15);
+  EXPECT_EQ(arr1->Avg(), 2.5f);
 }
 
 TEST_F(ArrayTest, MoveOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
+  arr1->LeftShift();
+  EXPECT_EQ(arr1->Get(arr1->length() - 1), 0);
 
-  arr->LeftShift();
-  EXPECT_EQ(arr->Get(arr->length() - 1), 0);
+  arr1->RightShift();
+  EXPECT_EQ(arr1->Get(0), 0);
 
-  arr->RightShift();
-  EXPECT_EQ(arr->Get(0), 0);
+  arr1->LeftRotate();
+  EXPECT_EQ(arr1->Get(0), 1);
 
-  arr->LeftRotate();
-  EXPECT_EQ(arr->Get(0), 1);
+  arr1->RightRotate();
+  EXPECT_EQ(arr1->Get(0), 0);
 
-  arr->RightRotate();
-  EXPECT_EQ(arr->Get(0), 0);
+  arr1->Reverse();
+  EXPECT_EQ(arr1->Get(0), 5);
 
-  arr->Reverse();
-  EXPECT_EQ(arr->Get(0), 5);
-
-  arr->Append(-4);
-  arr->Append(-12);
-  arr->Rearrange();
-  EXPECT_LT(arr->Get(0), 0);
-  EXPECT_GE(arr->Get(arr->length() - 1), 0);
+  arr1->Append(-4);
+  arr1->Append(-12);
+  arr1->Rearrange();
+  EXPECT_LT(arr1->Get(0), 0);
+  EXPECT_GE(arr1->Get(arr1->length() - 1), 0);
 }
 
 TEST_F(ArrayTest, CombinationOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
+  arr1->Copy(*arr);
+  EXPECT_TRUE(arr->Compare(*arr1));
 
-  Array arr2;
-  arr->Copy(arr2);
+  Array<float> arrMerged = arr->Merge(*arr2);
+  EXPECT_EQ(arrMerged.length(), 9);
 
-  EXPECT_TRUE(arr->Compare(arr2));
+  Array<float> arrConcatenated = arr->Concatenate(*arr2);
+  EXPECT_EQ(arrConcatenated.length(), 12);
 
-  Array *arrMerged = arr->Merge(arr2);
-  EXPECT_EQ(arrMerged->length(), 6);
-  delete arrMerged;
-
-  Array *arrConcatenated = arr->Concatenate(arr2);
-  EXPECT_EQ(arrConcatenated->length(), 12);
-
-  arr->Append(*arrConcatenated);
+  arr->Append(arrConcatenated);
   EXPECT_EQ(arr->length(), 18);
-  delete arrConcatenated;
 }
 
 TEST_F(ArrayTest, SetOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
+  Array<float> arrIntersection = arr1->Intersection(*arr2);
+  EXPECT_EQ(arrIntersection.length(), 3);
 
-  Array arr2;
-  arr->Copy(arr2);
+  Array<float> arrUnion = arr1->Union(*arr2);
+  EXPECT_EQ(arrUnion.length(), 9);
 
-  Array *arrIntersection = arr->Intersection(arr2);
-  EXPECT_TRUE(arr->Compare(*arrIntersection));
-
-  Array *arrUnion = arr->Union(arr2);
-  EXPECT_TRUE(arr->Compare(*arrUnion));
-
-  Array *arrDifference = arr->Difference(arr2);
-  EXPECT_EQ(arrDifference->length(), 0);
+  Array<float> arrDifference = arr1->Difference(*arr2);
+  EXPECT_EQ(arrDifference.length(), 6);
 }
 
 TEST_F(ArrayTest, SortOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
+  EXPECT_TRUE(arr1->IsSorted());
 
-  EXPECT_TRUE(arr->IsSorted());
+  arr1->InsertSort(-2);
 
-  arr->InsertSort(-2);
-
-  EXPECT_EQ(arr->Get(0), -2);
-}
-
-TEST_F(ArrayTest, MergeOperations) {
-  for (int i = 0; i < 6; i++) {
-    arr->Append(i);
-  }
-
-  EXPECT_TRUE(arr->IsSorted());
-
-  arr->InsertSort(-2);
-
-  EXPECT_EQ(arr->Get(0), -2);
+  EXPECT_EQ(arr1->Get(0), -2);
 }
 
 int main(int argc, char **argv) {
