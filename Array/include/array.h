@@ -43,6 +43,5 @@ extern int CompareArray(struct Array *arr1, struct Array *arr2);
 extern struct Array *Union(struct Array *arr1, struct Array *arr2);
 extern struct Array *Intersection(struct Array *arr1, struct Array *arr2);
 extern struct Array *Difference(struct Array *arr1, struct Array *arr2);
-extern struct Array *Difference(struct Array *arr1, struct Array *arr2);
 
 #endif

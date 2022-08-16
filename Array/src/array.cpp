@@ -12,7 +12,8 @@ void Array::Display() const {
 void Array::VerifySize() {
   if (length_ >= size_) {
     int *buffer;
-    Reserve(&buffer, size_ * ARRAY_MULT);
+    size_ *= ARRAY_MULT;
+    buffer = new int[size_];
     for (int i = 0; i < length_; i++) {
       buffer[i] = arr_[i];
     }
@@ -167,10 +168,162 @@ void Array::Rearrange() {
   while (i < j) {
     while (arr_[i] < 0)
       i++;
-    while (arr_[i] >= 0)
+    while (arr_[j] >= 0)
       j--;
     if (i < j) {
       Swap(&arr_[i], &arr_[j]);
     }
   }
+}
+
+Array *Array::Merge(const Array &array) const {
+  Array *buffer = new Array();
+  buffer->Reserve(length_ + array.length_);
+  int i, j, k;
+  i = j = k = 0;
+
+  while (i < length_ && j < array.length_) {
+    if (arr_[i] < array.arr_[j]) {
+      buffer->arr_[k++] = arr_[i++];
+    } else {
+      buffer->arr_[k++] = array.arr_[j++];
+      i++;
+    }
+  }
+
+  for (; i < length_; i++) {
+    buffer->arr_[k++] = arr_[i];
+  }
+
+  for (; j < array.length_; j++) {
+    buffer->arr_[k++] = array.arr_[j];
+  }
+
+  buffer->length_ = k;
+
+  return buffer;
+}
+
+Array *Array::Concatenate(const Array &array) const {
+  Array *buffer = new Array();
+  buffer->Reserve(length_ + array.length_);
+  int k = 0;
+  for (int i = 0; i < length_; i++) {
+    buffer->arr_[k++] = arr_[i];
+  }
+  for (int i = 0; i < array.length_; i++) {
+    buffer->arr_[k++] = array.arr_[i];
+  }
+  buffer->length_ = k;
+  return buffer;
+}
+
+void Array::Append(const Array &array) {
+  Array *buffer = Concatenate(array);
+  buffer->Copy(*this);
+  delete buffer;
+}
+
+void Array::Copy(Array &array) const {
+  array.length_ = length_;
+  array.size_ = size_;
+  delete array.arr_;
+  array.arr_ = new int[size_];
+  for (int i = 0; i < length_; i++) {
+    array.arr_[i] = arr_[i];
+  }
+}
+
+bool Array::Compare(const Array &array) const {
+  if (length_ != array.length_)
+    return false;
+
+  for (int i = 0; i < array.length_; i++) {
+    if (arr_[i] != array.arr_[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+Array *Array::Union(const Array &array) {
+  int i, j, k;
+  i = j = k = 0;
+
+  Array *buffer = new Array();
+  buffer->Reserve(array.length_ + length_);
+
+  while (i < length_ && j < array.length_) {
+    if (arr_[i] < array.arr_[j]) {
+      buffer->arr_[k++] = arr_[i++];
+    } else {
+      buffer->arr_[k++] = array.arr_[j++];
+      i++;
+    }
+  }
+
+  for (; i < length_; i++) {
+    buffer->arr_[k++] = arr_[i];
+  }
+
+  for (; j < array.length_; j++) {
+    buffer->arr_[k++] = array.arr_[j];
+  }
+
+  buffer->length_ = k;
+
+  return buffer;
+}
+
+Array *Array::Intersection(const Array &array) {
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  Array *buffer = new Array();
+  buffer->Reserve(array.length_ + length_);
+  while (i < length_ && j < array.length_) {
+    if (arr_[i] < array.arr_[j]) {
+      i++;
+    } else if (arr_[i] > array.arr_[j]) {
+      j++;
+    } else {
+      buffer->arr_[k++] = arr_[i++];
+      j++;
+    }
+  }
+
+  buffer->length_ = k;
+  return buffer;
+}
+
+Array *Array::Difference(const Array &array) {
+  int i, j, k;
+  i = j = k = 0;
+
+  Array *buffer = new Array();
+  buffer->Reserve(length_ + length_);
+
+  while (i < length_ && j < array.length_) {
+    if (arr_[i] < array.arr_[j]) {
+      buffer->arr_[k++] = arr_[i++];
+    } else if (arr_[i] > array.arr_[j]) {
+      buffer->arr_[k++] = array.arr_[j++];
+    } else {
+      i++;
+      j++;
+    }
+  }
+
+  for (; i < length_; i++) {
+    buffer->arr_[k++] = arr_[i];
+  }
+
+  for (; j < array.length_; j++) {
+    buffer->arr_[k++] = array.arr_[j];
+  }
+
+  buffer->length_ = k;
+
+  return buffer;
 }

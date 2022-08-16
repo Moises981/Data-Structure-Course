@@ -61,6 +61,48 @@ TEST_F(ArrayTest, MoveOperations) {
   arr->Append(-4);
   arr->Append(-12);
   arr->Rearrange();
+  EXPECT_LT(arr->Get(0), 0);
+  EXPECT_GE(arr->Get(arr->length() - 1), 0);
+}
+
+TEST_F(ArrayTest, CombinationOperations) {
+  for (int i = 0; i < 6; i++) {
+    arr->Append(i);
+  }
+
+  Array arr2;
+  arr->Copy(arr2);
+
+  EXPECT_TRUE(arr->Compare(arr2));
+
+  Array *arrMerged = arr->Merge(arr2);
+  EXPECT_EQ(arrMerged->length(), 6);
+  delete arrMerged;
+
+  Array *arrConcatenated = arr->Concatenate(arr2);
+  EXPECT_EQ(arrConcatenated->length(), 12);
+
+  arr->Append(*arrConcatenated);
+  EXPECT_EQ(arr->length(), 18);
+  delete arrConcatenated;
+}
+
+TEST_F(ArrayTest, SetOperations) {
+  for (int i = 0; i < 6; i++) {
+    arr->Append(i);
+  }
+
+  Array arr2;
+  arr->Copy(arr2);
+
+  Array *arrIntersection = arr->Intersection(arr2);
+  EXPECT_TRUE(arr->Compare(*arrIntersection));
+
+  Array *arrUnion = arr->Union(arr2);
+  EXPECT_TRUE(arr->Compare(*arrUnion));
+
+  Array *arrDifference = arr->Difference(arr2);
+  EXPECT_EQ(arrDifference->length(), 0);
 }
 
 TEST_F(ArrayTest, SortOperations) {
