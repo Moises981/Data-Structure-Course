@@ -48,5 +48,8 @@ extern struct Array Intersection(const struct Array *const arr1,
                                  const struct Array *const arr2);
 extern struct Array Difference(const struct Array *const arr1,
                                const struct Array *arr2);
+extern int FindMissingItem(const struct Array const *arr);
+extern int FindMissingItemGauss(const struct Array const *arr);
+extern struct Array FindMultipleItems(const struct Array const *arr);
 
 #endif

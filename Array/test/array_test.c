@@ -6,11 +6,11 @@ struct Array *array1;
 struct Array *array2;
 
 void insert_array(void) {
-  Insert(array, 0, 14);
-  Insert(array, 2, 5);
-  Insert(array, 4, 1);
-  TEST_ASSERT_EQUAL_INT32(14, array->arr[0]);
-  TEST_ASSERT_EQUAL_INT32(1, array->arr[4]);
+  Insert(array1, 0, 14);
+  Insert(array1, 2, 5);
+  Insert(array1, 4, 1);
+  TEST_ASSERT_EQUAL_INT32(14, array1->arr[0]);
+  TEST_ASSERT_EQUAL_INT32(1, array1->arr[4]);
 }
 
 void linear_search_array(void) {
@@ -43,7 +43,7 @@ void move_array(void) {
   TEST_ASSERT_EQUAL_INT32(0, array1->arr[array->length - 1]);
   RightRotate(array1);
   TEST_ASSERT_EQUAL_INT32(0, array1->arr[0]);
-  TEST_ASSERT_EQUAL_INT32(5, array1->arr[array->length - 1]);
+  TEST_ASSERT_EQUAL_INT32(5, array1->arr[array1->length - 1]);
 }
 
 void sort_array(void) {
@@ -87,6 +87,17 @@ void set_operations_array(void) {
   TEST_ASSERT_EQUAL_INT32(9, unitedArray.length);
 }
 
+void find_operations(void) {
+  Delete(array1, 4);
+  TEST_ASSERT_EQUAL_INT32(4, FindMissingItem(array1));
+  TEST_ASSERT_EQUAL_INT32(4, FindMissingItemGauss(array1));
+  Delete(array1, 3);
+
+  struct Array ar = FindMultipleItems(array1);
+  int values[] = {3, 4};
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values, ar.arr, 2);
+}
+
 void setUp(void) {
   array = (struct Array *)malloc(sizeof(struct Array));
   array1 = (struct Array *)malloc(sizeof(struct Array));
@@ -123,5 +134,6 @@ int main(void) {
   RUN_TEST(sort_array);
   RUN_TEST(merge_array);
   RUN_TEST(set_operations_array);
+  RUN_TEST(find_operations);
   return UNITY_END();
 }

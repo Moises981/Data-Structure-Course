@@ -55,8 +55,8 @@ void Insert(struct Array *const array, int index, int item) {
 
 void Delete(struct Array *const array, int index) {
   if (0 <= index && index <= array->length) {
-    for (int i = array->length; i > index; i--) {
-      array->arr[i] = array->arr[i - 1];
+    for (int i = index; i < array->length; i++) {
+      array->arr[i] = array->arr[i + 1];
     }
     array->length--;
   }
@@ -148,15 +148,15 @@ void Reverse(struct Array *const array) {
 }
 
 void LeftShift(struct Array *const array) {
-  for (int i = 1; i < array->length; i++) {
-    Swap(&array->arr[i - 1], &array->arr[i]);
+  for (int i = 0; i < array->length - 1; i++) {
+    array->arr[i] = array->arr[i + 1];
   }
   array->arr[array->length - 1] = 0;
 }
 
 void RightShift(struct Array *const array) {
-  for (int i = array->length - 1; i >= 0; i--) {
-    Swap(&array->arr[i - 1], &array->arr[i]);
+  for (int i = array->length - 1; i > 0; i--) {
+    array->arr[i] = array->arr[i - 1];
   }
   array->arr[0] = 0;
 }
@@ -370,4 +370,52 @@ struct Array Difference(const struct Array *const arr1,
   buffer.length = k;
 
   return buffer;
+}
+
+int FindMissingItem(const struct Array const *arr) {
+  int offset = arr->arr[0];
+  for (int i = 0; i < arr->length; i++) {
+    if (arr->arr[i] > offset++) {
+      return i;
+    }
+  }
+}
+
+int FindMissingItemGauss(const struct Array const *arr) {
+  int sum = arr->length * (arr->length + 1) * 0.5f;
+  return sum - Sum(arr);
+}
+
+struct Array FindMultipleItems(const struct Array const *arr) {
+  struct Array arrItems;
+  Init(&arrItems);
+  int offset = arr->arr[0];
+  for (int i = 0; i < arr->length; i++) {
+    int res = arr->arr[i] - offset++;
+    for (int j = 0; j < res; j++) {
+      Append(&arrItems, i + j);
+    }
+  }
+  return arrItems;
+}
+
+struct Array FindMultipleItemsHash(const struct Array const *arr) {
+  struct Array arr_items;
+  struct Array arr_hash;
+  Init(&arr_items);
+  Init(&arr_hash);
+
+  int h = Max(arr);
+  int l = Min(arr);
+
+  arr_hash.length = h + l;
+  Reserve(&arr_hash, arr_hash.length);
+
+  for (int i = 0; i < arr->length; i++) {
+    arr_hash.arr[arr->arr[i]]++;
+  }
+
+  for (int i = 0; i < arr_hash.length; i++) {
+    
+  }
 }
