@@ -51,5 +51,8 @@ extern struct Array Difference(const struct Array *const arr1,
 extern int FindMissingItem(const struct Array const *arr);
 extern int FindMissingItemGauss(const struct Array const *arr);
 extern struct Array FindMultipleItems(const struct Array const *arr);
-
+extern struct Array FindMultipleItemsHash(const struct Array const *arr);
+extern struct Array FindDuplicateItems(const struct Array const *arr);
+extern struct Array FindDuplicateItemsHash(const struct Array const *arr);
+extern struct Array FindDuplicateItemsUnsorted(const struct Array const arr);
 #endif

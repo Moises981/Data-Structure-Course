@@ -3,7 +3,7 @@
 void Init(struct Array *array) {
   array->size = ARRAY_SIZE;
   array->length = 0;
-  array->arr = (int *)malloc(sizeof(int) * array->size);
+  array->arr = (int *)calloc(array->size, sizeof(int));
 }
 
 static void VerifySize(struct Array *array) {
@@ -33,8 +33,11 @@ void Display(const struct Array *const array) {
 }
 
 void Reserve(struct Array *array, int size) {
-  array->size = size;
   array->arr = (int *)realloc(array->arr, sizeof(int) * size);
+  for (int i = array->size; i < size; i++) {
+    array->arr[i] = 0;
+  }
+  array->size = size;
 }
 
 void Append(struct Array *array, int item) {
@@ -412,10 +415,80 @@ struct Array FindMultipleItemsHash(const struct Array const *arr) {
   Reserve(&arr_hash, arr_hash.length);
 
   for (int i = 0; i < arr->length; i++) {
-    arr_hash.arr[arr->arr[i]]++;
+    arr_hash.arr[arr->arr[i] - l]++;
   }
 
   for (int i = 0; i < arr_hash.length; i++) {
-    
+    if (!arr_hash.arr[i]) {
+      Append(&arr_items, i + l);
+    }
   }
+
+  return arr_items;
+}
+
+struct Array FindDuplicateItems(const struct Array const *arr) {
+  struct Array arr_items;
+  Init(&arr_items);
+
+  int lastDuplicated = arr->arr[0];
+
+  for (int i = 0; i < arr->length - 1; i++) {
+    if (arr->arr[i] == arr->arr[i + 1]) {
+      lastDuplicated = arr->arr[i];
+      Append(&arr_items, lastDuplicated);
+    }
+    while (arr->arr[i] == arr->arr[i + 1]) {
+      i++;
+    }
+  }
+
+  return arr_items;
+}
+
+struct Array FindDuplicateItemsHash(const struct Array const *arr) {
+  struct Array arr_items;
+  struct Array arr_hash;
+  Init(&arr_items);
+  Init(&arr_hash);
+
+  int h = Max(arr);
+  int l = Min(arr);
+
+  arr_hash.length = h + l;
+  Reserve(&arr_hash, arr_hash.length);
+
+  for (int i = 0; i < arr->length; i++) {
+    arr_hash.arr[arr->arr[i] - l]++;
+  }
+
+  for (int i = 0; i < arr_hash.length; i++) {
+    if (arr_hash.arr[i] > 1) {
+      Append(&arr_items, i + l);
+    }
+  }
+
+  return arr_items;
+}
+
+struct Array FindDuplicateItemsUnsorted(const struct Array const arr) {
+  struct Array arr_items;
+  Init(&arr_items);
+
+  for (int i = 0; i < arr.length; i++) {
+    int count = 0;
+    if (arr.arr[i] != -1) {
+      for (int j = i + 1; j < arr.length; j++) {
+        if (arr.arr[i] == arr.arr[j]) {
+          arr.arr[j] = -1;
+          count++;
+        }
+      }
+      if (count > 0) {
+        Append(&arr_items, arr.arr[i]);
+      }
+    }
+  }
+
+  return arr_items;
 }

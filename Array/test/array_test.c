@@ -82,9 +82,11 @@ void set_operations_array(void) {
 
   struct Array intersectArray = Intersection(array1, array2);
   TEST_ASSERT_EQUAL_INT32(3, intersectArray.length);
+  free(intersectArray.arr);
 
   struct Array unitedArray = Union(array1, array2);
   TEST_ASSERT_EQUAL_INT32(9, unitedArray.length);
+  free(unitedArray.arr);
 }
 
 void find_operations(void) {
@@ -96,6 +98,29 @@ void find_operations(void) {
   struct Array ar = FindMultipleItems(array1);
   int values[] = {3, 4};
   TEST_ASSERT_EQUAL_INT32_ARRAY(values, ar.arr, 2);
+  free(ar.arr);
+
+  struct Array ar1 = FindMultipleItemsHash(array1);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values, ar1.arr, 2);
+  free(ar1.arr);
+
+  Insert(array2, 1, 2);
+  Insert(array2, 3, 4);
+  Insert(array2, 6, 8);
+  Insert(array2, 6, 8);
+
+  struct Array ar2 = FindDuplicateItems(array2);
+  int values2[] = {2, 4, 8};
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar2.arr, 3);
+  free(ar2.arr);
+
+  struct Array ar3 = FindDuplicateItemsHash(array2);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar3.arr, 3);
+  free(ar3.arr);
+
+  struct Array ar4 = FindDuplicateItemsUnsorted(*array2);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar3.arr, 3);
+  free(ar4.arr);
 }
 
 void setUp(void) {
