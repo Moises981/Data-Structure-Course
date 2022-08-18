@@ -271,7 +271,9 @@ void CopyArray(const struct Array *const from, struct Array *const to) {
   to->length = from->length;
   to->size = from->size;
   to->arr = (int *)malloc(sizeof(int) * from->size);
-  *to->arr = *from->arr;
+  for (int i = 0; i < from->length; i++) {
+    to->arr[i] = from->arr[i];
+  }
 }
 
 int CompareArray(const struct Array *const arr1,
@@ -471,24 +473,107 @@ struct Array FindDuplicateItemsHash(const struct Array const *arr) {
   return arr_items;
 }
 
-struct Array FindDuplicateItemsUnsorted(const struct Array const arr) {
+struct Array FindDuplicateItemsUnsorted(const struct Array *const arr) {
   struct Array arr_items;
+  struct Array arr_data;
   Init(&arr_items);
+  Init(&arr_data);
+  CopyArray(arr, &arr_data);
 
-  for (int i = 0; i < arr.length; i++) {
+  for (int i = 0; i < arr_data.length; i++) {
     int count = 0;
-    if (arr.arr[i] != -1) {
-      for (int j = i + 1; j < arr.length; j++) {
-        if (arr.arr[i] == arr.arr[j]) {
-          arr.arr[j] = -1;
+    if (arr_data.arr[i] != -1) {
+      for (int j = i + 1; j < arr_data.length; j++) {
+        if (arr_data.arr[i] == arr_data.arr[j]) {
+          arr_data.arr[j] = -1;
           count++;
         }
       }
       if (count > 0) {
-        Append(&arr_items, arr.arr[i]);
+        Append(&arr_items, arr_data.arr[i]);
       }
     }
   }
 
   return arr_items;
+}
+
+struct Array FindItemsThatSum(const struct Array *const arr, int sum) {
+  struct Array arr_items;
+  Init(&arr_items);
+
+  for (int i = 0; i < arr->length; i++) {
+    for (int j = i + 1; j < arr->length; j++) {
+      if (arr->arr[j] + arr->arr[i] == sum) {
+        Append(&arr_items, arr->arr[i]);
+        Append(&arr_items, arr->arr[j]);
+        return arr_items;
+      }
+    }
+  }
+
+  return arr_items;
+}
+
+struct Array FindItemsThatSumHash(const struct Array *const arr, int sum) {
+  struct Array arr_items;
+  struct Array arr_hash;
+  Init(&arr_items);
+  Init(&arr_hash);
+
+  int h = Max(arr);
+  int l = Min(arr);
+
+  arr_hash.length = h + l;
+  Reserve(&arr_hash, arr_hash.length);
+
+  for (int i = 0; i < arr->length; i++) {
+    arr_hash.arr[arr->arr[i] - l]++;
+  }
+
+  for (int i = 0; i < arr->length; i++) {
+    if (arr_hash.arr[sum - arr->arr[i]] > 0) {
+      Append(&arr_items, arr->arr[i]);
+      Append(&arr_items, sum - arr->arr[i]);
+      return arr_items;
+    }
+  }
+
+  return arr_items;
+}
+
+struct Array FindItemsThatSumSorted(const struct Array *const arr, int sum) {
+  struct Array arr_items;
+  Init(&arr_items);
+
+  int j = arr->length - 1;
+  int i = 0;
+  while (i < j) {
+    int total = arr->arr[i] + arr->arr[j];
+    if (total > sum) {
+      j--;
+    } else if (total < sum) {
+      i++;
+    } else {
+      Append(&arr_items, arr->arr[i]);
+      Append(&arr_items, arr->arr[j]);
+      return arr_items;
+    }
+  }
+
+  return arr_items;
+}
+
+struct Array FindMaxAndMin(const struct Array *const arr) {
+  int max = arr->arr[0];
+  int min = max;
+
+  for (int i = 1; i < arr->length; i++) {
+    if (arr->arr[i] > max) {
+      max = arr->arr[i];
+    }
+    if (arr->arr[i] < min) {
+      min = arr->arr[i];
+    }
+  }
 }

@@ -100,27 +100,42 @@ void find_operations(void) {
   TEST_ASSERT_EQUAL_INT32_ARRAY(values, ar.arr, 2);
   free(ar.arr);
 
-  struct Array ar1 = FindMultipleItemsHash(array1);
-  TEST_ASSERT_EQUAL_INT32_ARRAY(values, ar1.arr, 2);
-  free(ar1.arr);
+  struct Array buffer = FindMultipleItemsHash(array1);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values, buffer.arr, 2);
+  free(buffer.arr);
 
   Insert(array2, 1, 2);
   Insert(array2, 3, 4);
   Insert(array2, 6, 8);
   Insert(array2, 6, 8);
 
-  struct Array ar2 = FindDuplicateItems(array2);
+  buffer = FindDuplicateItems(array2);
   int values2[] = {2, 4, 8};
-  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar2.arr, 3);
-  free(ar2.arr);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, buffer.arr, 3);
+  free(buffer.arr);
 
-  struct Array ar3 = FindDuplicateItemsHash(array2);
-  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar3.arr, 3);
-  free(ar3.arr);
+  buffer = FindDuplicateItemsHash(array2);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, buffer.arr, 3);
+  free(buffer.arr);
 
-  struct Array ar4 = FindDuplicateItemsUnsorted(*array2);
-  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, ar3.arr, 3);
-  free(ar4.arr);
+  buffer = FindDuplicateItemsUnsorted(array2);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values2, buffer.arr, 3);
+  free(buffer.arr);
+
+  Delete(array2, 0);
+
+  int values3[] = {2, 8};
+  buffer = FindItemsThatSum(array2, 10);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values3, buffer.arr, 2);
+  free(buffer.arr);
+
+  buffer = FindItemsThatSumHash(array2, 10);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values3, buffer.arr, 2);
+  free(buffer.arr);
+
+  buffer = FindItemsThatSumSorted(array2, 10);
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values3, buffer.arr, 2);
+  free(buffer.arr);
 }
 
 void setUp(void) {
