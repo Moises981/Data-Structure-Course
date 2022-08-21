@@ -146,3 +146,21 @@ int *Duplicated(const char *const string) {
   }
   return characters;
 }
+
+int DuplicatedBitwise(const char *const string) {
+  int buffer = 0;
+  for (int i = 0; string[i] != '\0'; i++) {
+    if (64 < string[i] && string[i] < 91) {
+      int x = 1 << string[i] - 65;
+      if ((x & buffer) == 0) {
+        buffer = buffer | x;
+      }
+    } else if (96 < string[i] && string[i] < 123) {
+      int x = 1 << string[i] - 97;
+      if ((x & buffer) == 0) {
+        buffer = buffer | x;
+      }
+    }
+  }
+  return buffer;
+}

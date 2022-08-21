@@ -34,6 +34,8 @@ void string_cases() {
                     0, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0};
   TEST_ASSERT_EQUAL_INT32_ARRAY(values, dup, 25);
   free(dup);
+
+  TEST_ASSERT_EQUAL_INT32(4343960, DuplicatedBitwise(string));
 }
 
 void setUp() {
