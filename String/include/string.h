@@ -18,5 +18,6 @@ extern bool IsValid(const char *const string);
 extern void Reverse(char *const string);
 extern int Compare(const char *const string1, const char *const string2);
 extern bool Palindrome(const char *const string);
+extern int *Duplicated(const char *const string);
 
 #endif

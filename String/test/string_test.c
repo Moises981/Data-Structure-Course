@@ -28,6 +28,12 @@ void string_cases() {
   TEST_ASSERT_EQUAL_INT32(0, Palindrome(string));
 
   TEST_ASSERT_EQUAL_INT32(1, Palindrome("madam"));
+
+  int *dup = Duplicated(string);
+  int values[25] = {0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 3, 0,
+                    0, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0};
+  TEST_ASSERT_EQUAL_INT32_ARRAY(values, dup, 25);
+  free(dup);
 }
 
 void setUp() {

@@ -19,7 +19,7 @@ void UpperCase(char *const string) {
   }
 }
 
-void LowerCase(char *string) {
+void LowerCase(char *const string) {
   for (int i = 0; string[i] != '\0'; i++) {
     if (64 < string[i] && string[i] < 91) {
       string[i] += 32;
@@ -133,4 +133,16 @@ bool Palindrome(const char *const string) {
     free(string2);
     return false;
   }
+}
+
+int *Duplicated(const char *const string) {
+  int *characters = calloc(sizeof(int), 25);
+  for (int i = 0; i < string[i] != '\0'; i++) {
+    if (64 < string[i] && string[i] < 91) {
+      characters[string[i] - 65]++;
+    } else if (96 < string[i] && string[i] < 123) {
+      characters[string[i] - 97]++;
+    }
+  }
+  return characters;
 }
