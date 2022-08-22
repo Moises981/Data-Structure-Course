@@ -192,7 +192,7 @@ bool Anagram(const char *const string1, const char *const string2) {
   return true;
 }
 
-void Permutation(const char *const string, int k) {
+void PermutationRecursive(const char *const string, int k) {
   static int hash[4] = {0};
   static char res[4];
   if (string[k] == '\0') {
@@ -207,5 +207,11 @@ void Permutation(const char *const string, int k) {
       Permutation(string, k + 1);
       hash[i]--;
     }
+  }
+}
+
+void PermutationRecursive2(const char *const string, int l, int h) {
+  for (int i = l; i <= h; i++) {
+    
   }
 }
