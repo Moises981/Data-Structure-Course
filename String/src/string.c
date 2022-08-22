@@ -152,15 +152,60 @@ int DuplicatedBitwise(const char *const string) {
   for (int i = 0; string[i] != '\0'; i++) {
     if (64 < string[i] && string[i] < 91) {
       int x = 1 << string[i] - 65;
-      if ((x & buffer) == 0) {
-        buffer = buffer | x;
-      }
+      buffer |= x;
     } else if (96 < string[i] && string[i] < 123) {
       int x = 1 << string[i] - 97;
-      if ((x & buffer) == 0) {
-        buffer = buffer | x;
-      }
+      buffer |= x;
     }
   }
   return buffer;
+}
+
+bool Anagram(const char *const string1, const char *const string2) {
+  int i;
+  int buffer = 0;
+
+  for (i = 0; i < string1[i] != '\0'; i++) {
+    if (64 < string1[i] && string1[i] < 91) {
+      int x = 1 << string1[i] - 65;
+      buffer |= x;
+    } else if (96 < string1[i] && string1[i] < 123) {
+      int x = 1 << string1[i] - 97;
+      buffer |= x;
+    }
+  }
+
+  for (i = 0; i < string2[i] != '\0'; i++) {
+    if (64 < string2[i] && string2[i] < 91) {
+      int x = 1 << string1[i] - 65;
+      if ((x & buffer) == 0) {
+        return false;
+      }
+    } else if (96 < string2[i] && string2[i] < 123) {
+      int x = 1 << string1[i] - 97;
+      if ((x & buffer) == 0) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+void Permutation(const char *const string, int k) {
+  static int hash[4] = {0};
+  static char res[4];
+  if (string[k] == '\0') {
+    res[k] = '\0';
+    printf("%s\n", res);
+    return;
+  }
+  for (int i = 0; string[i] != '\0'; i++) {
+    if (hash[i] == 0) {
+      hash[i]++;
+      res[k] = string[i];
+      Permutation(string, k + 1);
+      hash[i]--;
+    }
+  }
 }

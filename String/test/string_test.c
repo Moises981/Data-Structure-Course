@@ -36,6 +36,10 @@ void string_cases() {
   free(dup);
 
   TEST_ASSERT_EQUAL_INT32(4343960, DuplicatedBitwise(string));
+
+  TEST_ASSERT_TRUE(Anagram("verbose","observe"));
+
+  Permutation("abcd",0);
 }
 
 void setUp() {
