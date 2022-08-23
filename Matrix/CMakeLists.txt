@@ -8,7 +8,7 @@ add_subdirectory(/usr/src/gtest ${PROJECT_BINARY_DIR}/gtest)
 
 include_directories(include ${gtest_SOURCE_DIR})
 
-add_library(matrix src/diagonal.cpp)
+add_library(matrix src/base.cpp src/diagonal.cpp src/triangular.cpp)
 
 enable_testing()
 

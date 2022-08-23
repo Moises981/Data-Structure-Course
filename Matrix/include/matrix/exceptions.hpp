@@ -1,9 +1,10 @@
+#pragma once
 #include <iostream>
 
 namespace Matrix {
-class DiagonalReadonlyException : std::exception {
+class MatrixReadonlyException : std::exception {
   const char *what() const throw() {
-    return "Non diagonal elements are readonly";
+    return "Some elements in matrix are readonly";
   }
 };
 }; // namespace Matrix
